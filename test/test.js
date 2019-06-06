@@ -8,7 +8,34 @@ class RModel extends QL.Model
     constructor()
     {
         super();
+
+        this.a = 'b';
+    }
+
+    forUsers()
+    {
+        return 'RModel::forUsers';
+    }
+
+    jozko()
+    {
+        return '';
     }
 }
 
-const model = new RModel();
+class Model2 extends RModel
+{
+    constructor()
+    {
+        super();
+    }
+
+    model2()
+    {
+
+    }
+}
+
+const model = new Model2();
+
+console.log( model.forUsers() );
