@@ -17,3 +17,4 @@ const test_path = require('../lib/relations.js');
 
 const model_test = new test_path( relat );
 let test = model_test.path( "users", "user_accounts" );
+console.log( JSON.stringify( test ));
