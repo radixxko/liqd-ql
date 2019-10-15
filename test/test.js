@@ -1,41 +1,19 @@
 'use strict';
 
-const QL = require('../lib/ql');
+let relat = {
 
-
-class RModel extends QL.Model
-{
-    constructor()
+    "users":
     {
-        super();
-
-        this.a = 'b';
-    }
-
-    forUsers()
+        "user_accounts" : { "condition": [ "user_accounts.userID = users.id" ] }
+    },
+    "accounts":
     {
-        return 'RModel::forUsers';
-    }
-
-    jozko()
-    {
-        return '';
+        "user_accounts" : { "condition": [ "user_accounts.accountID = accounts.id" ] }
     }
 }
 
-class Model2 extends RModel
-{
-    constructor()
-    {
-        super();
-    }
 
-    model2()
-    {
+const test_path = require('../lib/relations.js');
 
-    }
-}
-
-const model = new Model2();
-
-console.log( model.forUsers() );
+const model_test = new test_path( relat );
+let test = model_test.path( "users", "user_accounts" );
