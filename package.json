@@ -27,6 +27,8 @@
     "nyc": "^11.6.0"
   },
   "dependencies": {
-    "liqd-parser": "^1.3.0"
+    "liqd-parser": "^1.3.0",
+    "liqd-sql": "^1.5.3",
+    "mysql": "^2.17.1"
   }
 }
