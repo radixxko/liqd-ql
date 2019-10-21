@@ -1,20 +1,20 @@
 'use strict';
+const fs = require('fs');
 
-let relat = {
+describe( 'Tests', ( done ) =>
+{
+	var files = fs.readdirSync( __dirname + '/tests' );
 
-    "users":
-    {
-        "user_accounts" : { "condition": [ "user_accounts.userID = users.id" ] }
-    },
-    "accounts":
-    {
-        "user_accounts" : { "condition": [ "user_accounts.accountID = accounts.id" ] }
+	for( let file of files )
+	{
+		if( !file.match(/\.js$/) ){ continue; }
+
+		describe( file, () =>
+		{
+			require( __dirname + '/tests/' + file );
+		});
     }
-}
 
-
-const test_path = require('../lib/relations.js');
-
-const model_test = new test_path( relat );
-let test = model_test.path( "users", "user_accounts" );
-console.log( JSON.stringify( test ));
+    //process.exit();
+    setTimeout(  process.exit, 10000);
+});
