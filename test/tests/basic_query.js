@@ -8,15 +8,15 @@ const SQL = new (require('liqd-sql'))(
     {
         mysql :
         {
-            host     : 'host',
-            user     : 'user',
-            password : 'password',
-            database : 'liqd_test'
+            host     : '192.168.1.30',
+            user     : 'qltest',
+            password : 'qltest',
+            database : 'qltest'
         }
 });
 
 
-
+/*
 class Person extends QL.Model
 {
     constructor( DB, router )
@@ -31,7 +31,7 @@ class Person extends QL.Model
             }
         }});
     }
-}
+}*/
 
 
 it( 'should create table cities', async() =>

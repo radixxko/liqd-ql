@@ -86,7 +86,7 @@ let router = ()=>{
     return new QL( SQL, tables, relations, router );
 };
 
-let query = 'cities( id < 40 )[ id, name, schools()[ id, name, cities(){ persons()[ id, name ] } ] ] ]';
+let query = 'cities( id < 40 ){ id, name }';
 
 async function test()
 {
