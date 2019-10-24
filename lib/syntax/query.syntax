@@ -18,7 +18,7 @@
 	/("(([^\\"]|\\.)*?)"|'(([^\\']|\\.)*?)'|[^"'\{\}]+|\{\s*\}|\{(?R)\})+/
 
 :operator
-    /(\*=\*|\*=|=\*|=|!=|<=|<|>=|>)/
+    /(\*=\*|\*=|=\*|=|!=|<=|<|>=|>|LIKE)/
 
 :json
     { $json:pair_curly_brackets }
@@ -38,9 +38,14 @@
     $column:alphanumeric $:operator $:value ?:/,/
 
 :conditions
-    ( ...$:condition ?...$:modifiers )
+    ( ?...$:condition ?...$:modifiers )
+
+:query
+    $:table ?$condition:conditions { ...$columns:column }
 
 :column
+    $alias:alphanumeric : $column:query ?:/,/
+    $column:query ?:/,/
     $alias:alphanumeric : $column:alphanumeric ?:/,/
     $column:alphanumeric ?:/,/
 

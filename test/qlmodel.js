@@ -1,6 +1,6 @@
 'use strict';
 
-const QLModel = require('../lib/model');
+const QL = require('../lib/ql');
 const SQL = require('liqd-sql');
 const DB = new SQL(
 {
@@ -13,7 +13,7 @@ const DB = new SQL(
     }
 })
 
-const model = new QLModel( DB, [ 'cities', 'schools', 'persons', 'persons_schools' ],
+const model = new QL.Model( DB, [ 'cities', 'schools', 'persons', 'persons_schools' ],
 {
     "cities":
     {
@@ -37,7 +37,7 @@ setTimeout( async function()
 {
     let start = process.hrtime();
 
-    let result = await model.get(
+    /*let result = await model.get(
     {
         table: 'cities',
         condition: [[ 'active', '=', 1 ], [ 'postalCode', 'LIKE', '05%' ]],
@@ -65,7 +65,37 @@ setTimeout( async function()
                 }
             }
         }
-    });
+    });*/
+
+    /*let result = await model.get( 
+        `cities( active = 1, postalCode LIKE "05%" )
+        {
+            mesto: name, psc: postalCode,
+            skolicky: schools( active = 1 )
+            {
+                skola: name,
+                cloviecici: persons
+                {
+                    id, meno: name, priezvisko: surname
+                }
+            }
+        }`
+    );*/
+
+    let result = await model.get( 
+        `cities( active = 1, postalCode LIKE "05%" )
+        {
+            name, postalCode,
+            skolicky: schools( active = 1 )
+            {
+                name,
+                persons
+                {
+                    id, name, surname
+                }
+            }
+        }`
+    );
 
     let end = process.hrtime( start );
 
