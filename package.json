@@ -1,7 +1,7 @@
 {
   "name": "liqd-ql",
   "description": "Query Language library",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "author": "radixxko",
   "license": "MIT",
   "main": "lib/ql.js",

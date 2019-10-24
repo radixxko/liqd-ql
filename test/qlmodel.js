@@ -82,7 +82,7 @@ setTimeout( async function()
         }`
     );*/
 
-    let result = await model.get( 
+    /*let result = await model.get( 
         `cities( active = 1, postalCode LIKE "05%" )
         {
             name, postalCode,
@@ -93,6 +93,25 @@ setTimeout( async function()
                 {
                     id, name, surname
                 }
+            }
+        }`
+    );*/
+
+    let result = await model.get( 
+        `schools
+        {
+            skola: name,
+            c: cities
+            {
+                mesto: name
+            },
+            mestecka: cities
+            {
+                mesto: name
+            },
+            ziaci: persons
+            {
+                meno: name, priezvisko: surname
             }
         }`
     );
