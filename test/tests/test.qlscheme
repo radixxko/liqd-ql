@@ -1,0 +1,78 @@
+users
+{
+    -> registrations : registrations.userID = users.id
+    -> tokens : tokens.userID = users.id
+    -> user_intents : user_intents.userID = users.id
+    -> accounts - user_accounts - users
+    -> organizations - organization_users - users
+
+    =updated : { user } =>
+    {
+        user.updated = Lib.Time.getSeconds();
+    }
+
+    =signature( id, email ) : { user } =>
+    {
+        user.signature = Lib.Crypto.sign({ id: user.id, email: user.email });
+    }
+
+    .valid( id, email, signature ) : { user } =>
+    {
+        user.valid = Lib.Crypto.verify({ id: user.id, email: user.email }, user.signature);
+    }
+}
+
+organization_users
+{
+    -> users : users.id = organization_users.userID
+    -> organizations : organizations.id = organization_users.organizationID
+}
+
+tokens
+{
+    -> user_intents : user_intents.tokenID = tokens.id
+    
+    =updated : { token } =>
+    {
+        token.updated = Lib.Time.getSeconds();
+    }
+    
+    =signature( id, uid, userID, active, name, platform, system, version, pushID, certificate, created, updated ) : { token } =>
+    {
+        token.signature = Lib.Crypto.sign(
+        {
+                 id : token.id,
+                uid : token.uid,
+             userID : token.userID,
+             active : token.active,
+               name : token.name,
+           platform : token.platform,
+             system : token.system,
+            version : token.version,
+             pushID : token.pushID,
+        certificate : token.certificate,
+            created : token.created,
+            updated : token.updated
+        });
+    }
+    
+    .valid( id, uid, userID, active, name, platform, system, version, pushID, certificate, created, updated, signature ) : { token } =>
+    {
+        token.valid = Lib.Crypto.verify(
+        {
+                    id : token.id,
+                   uid : token.uid,
+                userID : token.userID,
+                active : token.active,
+                  name : token.name,
+              platform : token.platform,
+                system : token.system,
+               version : token.version,
+                pushID : token.pushID,
+           certificate : token.certificate,
+               created : token.created,
+               updated : token.updated
+        },
+        token.signature );
+    }
+}

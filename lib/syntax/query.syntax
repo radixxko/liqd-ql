@@ -6,7 +6,7 @@
     /[-]{0,1}[0-9]+/
 
 :alphanumeric
-    /[a-zA-Z][a-zA-Z0-9_]*/
+    /[a-zA-Z0-9_]+/
 
 :pair_round_brackets
 	/("(([^\\"]|\\.)*?)"|'(([^\\']|\\.)*?)'|[^"'\(\)]+|\(\s*\)|\((?R)\))+/
@@ -23,16 +23,20 @@
 :json
     { $json:pair_curly_brackets }
 
+:sql
+    /([^;()]|\(([^;()]|\([^;()]+\))+\))+(?=[;)])/
+
 :value
     $:string
     $:number
     $:json
+    $:sql
 
 :table
     :alphanumeric
 
 :modifiers
-    ; $modifier:/(after|before|order|limit)/ : $:value
+    ; $modifier:/(after|before|orderBy|groupBy|limit)/ : $:value
 
 :condition
     $column:alphanumeric $:operator $:value ?:/,/
@@ -41,13 +45,13 @@
     ( ?...$:condition ?...$:modifiers )
 
 :query
-    $:table ?$condition:conditions { ...$columns:column }
+    $:table ?$condition:conditions $bracket:/[{\[]/ ...$columns:column /[}\]]/
 
 :column
     $alias:alphanumeric : $column:query ?:/,/
-    $column:query ?:/,/
+    ?$expand:/\.\.\./ $column:query ?:/,/
     $alias:alphanumeric : $column:alphanumeric ?:/,/
     $column:alphanumeric ?:/,/
 
 :main
-    $:table ?$condition:conditions { ...$columns:column }
+    :query

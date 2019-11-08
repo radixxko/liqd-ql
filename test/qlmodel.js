@@ -13,23 +13,31 @@ const DB = new SQL(
     }
 })
 
-const model = new QL.Model( DB, [ 'cities', 'schools', 'persons', 'persons_schools' ],
+const model = new QL.Model( DB, `
+cities
 {
-    "cities":
+    -> schools : schools.cityID = cities.id
+    -> persons : persons.cityID = cities.id
+
+    .meno( id, name ) : { city } =>
     {
-        "schools" : { "condition": "schools.cityID = cities.id" },
-        "persons" : { "condition": "persons.cityID = cities.id" }
-    },
-    "persons_schools":
-    {
-        "persons" : { "condition": "persons.id = persons_schools.personID" },
-        "schools" : { "condition": "schools.id = persons_schools.schoolID" }
-    },
-    "persons":
-    {
-        "schools" : { "path": [ "persons_schools" ] }
+        return 'meno pre (' + city.id + ') je: ' + city.name;
     }
-});
+}
+
+persons_schools
+{
+    -> persons : persons.id = persons_schools.personID
+    -> schools : schools.id = persons_schools.schoolID
+}
+
+persons
+{
+    -> schools - persons_schools - persons
+}
+
+schools{}
+`);
 
 DB.query('cities').get();
 
@@ -99,25 +107,18 @@ setTimeout( async function()
 
     let result = await model.get( 
         `schools
-        {
+        [
             skola: name,
-            c: cities
-            {
-                mesto: name
-            },
-            mestecka: cities
-            {
-                mesto: name
-            },
-            ziaci: persons
-            {
-                meno: name, priezvisko: surname
-            }
-        }`
+            ...cities{ name, meno },
+            ziaci: persons( ; orderBy: persons.id DESC )
+            [
+                id, meno: name, priezvisko: surname
+            ]
+        ]`
     );
 
     let end = process.hrtime( start );
 
     console.log( JSON.stringify( result, null, '  ' ), ( end[0] * 1000 + end[1] / 1e6 ).toFixed(2) + ' ms' );
 },
-2000 );
+1 );

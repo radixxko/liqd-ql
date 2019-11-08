@@ -1,0 +1,35 @@
+:alphanumeric
+    /[a-zA-Z0-9_]+/
+
+:pair_curly_brackets
+	/("(([^\\"]|\\.)*?)"|'(([^\\']|\\.)*?)'|[^"'\{\}]+|\{\s*\}|\{(?R)\})+/
+
+:condition
+    /\s*(.*?)\s*\n/1
+
+:path
+    - :alphanumeric
+
+:columns
+    ( ?...$columns:/([a-zA-Z0-9_]+)\s*,?/1 )
+
+:getter
+    . $column:alphanumeric ?$requires:columns : $:callback
+
+:setter
+    = $column:alphanumeric ?$any:columns : $:callback
+
+:callback
+    $bracket:/[{\[]/ $variable:alphanumeric /[}\]]/ => { $script:pair_curly_brackets }
+
+:definition
+    -> $table:alphanumeric : $:condition
+    -> $table:alphanumeric ...$:path
+    $:getter
+    $:setter
+
+:table
+    $table:alphanumeric { ?...$definitions:definition }
+
+:main
+    ...$tables:table
