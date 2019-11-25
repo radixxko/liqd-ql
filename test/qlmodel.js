@@ -14,13 +14,15 @@ const DB = new SQL(
 })
 
 const model = new QL.Model( DB, `
-cities
+_cities
 {
-    -> schools : schools.cityID = cities.id
-    -> persons : persons.cityID = cities.id
+    -> schools : schools.cityID = _cities.id
+    -> persons : persons.cityID = _cities.id
 
     .meno( id, name ) : { city } =>
     {
+        console.log({ QLModel });
+
         return 'meno pre (' + city.id + ') je: ' + city.name;
     }
 }
@@ -109,7 +111,7 @@ setTimeout( async function()
         `schools
         [
             skola: name,
-            ...cities{ name, meno },
+            ..._cities{ name, meno },
             ziaci: persons( ; orderBy: persons.id DESC )
             [
                 id, meno: name, priezvisko: surname
