@@ -19,6 +19,9 @@
 :setter
     = $column:alphanumeric ?$any:columns : $:callback
 
+:alias
+    : $name:alphanumeric : $:condition
+
 :callback
     $bracket:/[{\[]/ $variable:alphanumeric /[}\]]/ => { $script:pair_curly_brackets }
 
@@ -27,6 +30,7 @@
     -> $table:alphanumeric ...$:path
     $:getter
     $:setter
+    $:alias
 
 :table
     $table:alphanumeric { ?...$definitions:definition }
