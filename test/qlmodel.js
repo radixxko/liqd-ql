@@ -112,7 +112,7 @@ setTimeout( async function()
         [
             skola: name,
             ..._cities{ name, meno },
-            ziaci: persons( ; orderBy: persons.id DESC )
+            ziaci: persons( ; orderBy: persons.id DESC; groupBy: persons.name )
             [
                 id, meno: name, priezvisko: surname
             ]
